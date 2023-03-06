@@ -3,12 +3,20 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from .models import User, Post, Connection
+from django import forms
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
-from .models import User
+# Create new post form
+class NewPostForm(forms.Form):
+    content = forms.CharField(label="New Post", max_length=280, required=True, widget=forms.Textarea(attrs={'class': 'form-control mb-2', 'rows': '4'}))
 
 
 def index(request):
-    return render(request, "network/index.html")
+    return render(request, "network/index.html", {
+        "form": NewPostForm()
+    })
 
 
 def login_view(request):
@@ -22,7 +30,7 @@ def login_view(request):
         # Check if authentication successful
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse("index"))
+            return HttpResponseRedirect(reverse("network:index"))
         else:
             return render(request, "network/login.html", {
                 "message": "Invalid username and/or password."
@@ -33,7 +41,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect(reverse("index"))
+    return HttpResponseRedirect(reverse("network:index"))
 
 
 def register(request):
@@ -58,6 +66,23 @@ def register(request):
                 "message": "Username already taken."
             })
         login(request, user)
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(reverse("network:index"))
     else:
         return render(request, "network/register.html")
+
+
+@login_required(login_url='/login')
+def new_post(request):
+    '''This function saves the listing details (coming 
+    from a post request) in the database.
+    '''
+    if request.method == "POST":
+        current_user = request.user
+        new_post = Post()
+        new_post.creator = current_user
+        new_post.content = request.POST["content"]
+        new_post.save()
+        messages.success(request, 'Your post was uploaded successfully!')
+        return HttpResponseRedirect(reverse("network:index"))
+    else: # GET
+        return HttpResponseRedirect(reverse("network:index"))
