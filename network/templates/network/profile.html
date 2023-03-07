@@ -22,7 +22,7 @@
         </div>
     </div>
     <div class="mt-4 profile_page_font_size">Posts</div>
-    {% for post in profile_user.posts.all %}
+    {% for post in profile_user_posts %}
         <div class="post_container d-flex justify-content-start align-items-start mb-3">
             <i class="bi bi-person-square user_icon mr-2 d-flex justify-content-start"></i>
             <div class="post_details d-flex flex-column justify-content-start align-items-start">
@@ -40,6 +40,8 @@
                 </div>
             </div>
         </div>
+    {% empty %}
+        <div>{{ profile_user.username }} has no posts yet.</div>
     {% endfor %}
 </div>
 {% endblock %}

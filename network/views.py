@@ -92,6 +92,7 @@ def new_post(request):
 
 def profile(request, username):
     profile_user = User.objects.get(username=username)
+    profile_user_posts = profile_user.posts.order_by("-timestamp")
     profile_user_followers = profile_user.get_followers()
     followers_number = len(profile_user_followers)
     profile_user_following = profile_user.get_following()
@@ -103,6 +104,7 @@ def profile(request, username):
 
     return render(request, "network/profile.html", {
         "profile_user": profile_user,
+        "profile_user_posts": profile_user_posts,
         "followers_number": followers_number,
         "following_number": following_number,
         "loggedIn_user_following": loggedIn_user_following
