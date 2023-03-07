@@ -14,8 +14,10 @@ class NewPostForm(forms.Form):
 
 
 def index(request):
+    posts = Post.objects.order_by("-timestamp").all()
     return render(request, "network/index.html", {
-        "form": NewPostForm()
+        "form": NewPostForm(),
+        "posts": posts
     })
 
 
@@ -73,7 +75,7 @@ def register(request):
 
 @login_required(login_url='/login')
 def new_post(request):
-    '''This function saves the listing details (coming 
+    '''This function saves a new post (coming 
     from a post request) in the database.
     '''
     if request.method == "POST":
