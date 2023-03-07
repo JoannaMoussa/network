@@ -16,7 +16,7 @@
                 <i class="bi bi-person-square user_icon mr-2 d-flex justify-content-start"></i>
                 <div class="post_details d-flex flex-column justify-content-start align-items-start">
                     <div class="username_timestamp_container">
-                        <div class="mr-3">{{ post.creator }} · {{ post.timestamp }}</div>
+                        <div class="mr-3"><a href="{% url 'network:profile' post.creator.username %}">{{ post.creator }}</a> · {{ post.timestamp }}</div>
                     </div>
                     <div class="content_container mb-2">{{ post.content }}</div>
                     <div class="likes_container d-flex justify-content-start align-items-start">

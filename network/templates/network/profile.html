@@ -1,0 +1,45 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+<div class="profile_page_container ml-4 mt-4 d-flex flex-column">
+    <div class="user_details_container d-flex justify-content-start align-items-start">
+        <i class="bi bi-person-square d-flex align-items-start mr-3 profile_page_icon"></i>
+        <div class="next_to_icon_container d-flex flex-column justify-content-start align-items-start">
+            <div class="username_follow_btn_container d-flex">
+                <div class="profile_page_font_size">{{ profile_user.username }}</div>
+                {% if user.is_authenticated and request.user != profile_user %}
+                    {% if profile_user in loggedIn_user_following %}
+                        <button class="btn btn-sm btn-primary rounded-pill ml-3">Unfollow</button>
+                    {% else %}
+                        <button class="btn btn-sm btn-primary rounded-pill ml-3">Follow</button>
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div class="following_followers_container d-flex">
+                <div class="mr-3 profile_page_font_size"><strong>{{ following_number }}</strong> Following</div>
+                <div class="profile_page_font_size"><strong>{{ followers_number }}</strong> Followers</div>
+            </div>
+        </div>
+    </div>
+    <div class="mt-4 profile_page_font_size">Posts</div>
+    {% for post in profile_user.posts.all %}
+        <div class="post_container d-flex justify-content-start align-items-start mb-3">
+            <i class="bi bi-person-square user_icon mr-2 d-flex justify-content-start"></i>
+            <div class="post_details d-flex flex-column justify-content-start align-items-start">
+                <div class="username_timestamp_container">
+                    <div class="mr-3"><a href="{% url 'network:profile' post.creator.username %}">{{ post.creator }}</a> · {{ post.timestamp }}</div>
+                </div>
+                <div class="content_container mb-2">{{ post.content }}</div>
+                <div class="likes_container d-flex justify-content-start align-items-start">
+                    {% if request.user in post.likers %}
+                        <i class="bi bi-heart-fill heart_icon"></i>
+                    {% else %}
+                        <i class="bi bi-heart heart_icon"></i>
+                    {% endif %}
+                    <div class="likes_count_container ml-2">{{ post.likers.count }}</div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

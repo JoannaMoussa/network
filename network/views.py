@@ -88,3 +88,22 @@ def new_post(request):
         return HttpResponseRedirect(reverse("network:index"))
     else: # GET
         return HttpResponseRedirect(reverse("network:index"))
+
+
+def profile(request, username):
+    profile_user = User.objects.get(username=username)
+    profile_user_followers = profile_user.get_followers()
+    followers_number = len(profile_user_followers)
+    profile_user_following = profile_user.get_following()
+    following_number = len(profile_user_following)
+
+    loggedIn_user_following = None
+    if request.user.is_authenticated:
+        loggedIn_user_following = request.user.get_following()
+
+    return render(request, "network/profile.html", {
+        "profile_user": profile_user,
+        "followers_number": followers_number,
+        "following_number": following_number,
+        "loggedIn_user_following": loggedIn_user_following
+    })

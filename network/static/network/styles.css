@@ -1,3 +1,4 @@
+/*Posts*/
 .user_icon {
     font-size: 35px;
     margin-top: 5px;
@@ -5,4 +6,15 @@
 
 .heart_icon {
     margin-top: 1px;
+}
+
+
+/*Profile page*/
+.profile_page_icon {
+    margin-top: 7px;
+    font-size: 50px;
+}
+
+.profile_page_font_size {
+    font-size: 20px;
 }
