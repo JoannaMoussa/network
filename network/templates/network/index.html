@@ -11,7 +11,7 @@
                 </form>
             </div>
         {% endif %}
-        {% for post in posts %}
+        {% for post in page_obj %}
             <div class="post_container d-flex justify-content-start align-items-start mb-3">
                 <i class="bi bi-person-square user_icon mr-2 d-flex justify-content-start"></i>
                 <div class="post_details d-flex flex-column justify-content-start align-items-start">
@@ -29,6 +29,22 @@
                     </div>
                 </div>
             </div>
+        {% empty %}
+            {% if following_posts_page %}
+                <div>Follow users so you can see their posts!</div>
+            {% endif %}
         {% endfor %}
+
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                {% for page in page_numbers_list %}
+                    {% if page == page_obj.paginator.ELLIPSIS %}
+                        <li class="page-item"><span class="page-link">{{ page }}</span></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page }}">{{ page }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </nav>
     </div>
 {% endblock %}

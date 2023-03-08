@@ -17,7 +17,12 @@
             </div>
             <div class="following_followers_container d-flex">
                 <div class="mr-3 profile_page_font_size"><strong>{{ following_number }}</strong> Following</div>
-                <div class="profile_page_font_size"><strong>{{ followers_number }}</strong> Followers</div>
+                {% if followers_number == 1 %}
+                    <div class="profile_page_font_size"><strong>{{ followers_number }}</strong> Follower</div>
+                {% else %}
+                    <div class="profile_page_font_size"><strong>{{ followers_number }}</strong> Followers</div>
+                {% endif %}
+                
             </div>
         </div>
     </div>

@@ -7,6 +7,7 @@ from .models import User, Post, Connection
 from django import forms
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.paginator import Paginator
 
 # Create new post form
 class NewPostForm(forms.Form):
@@ -14,10 +15,44 @@ class NewPostForm(forms.Form):
 
 
 def index(request):
+    '''
+    This function renders index.html that displays 
+    the new post form if the user is authenticated,
+    and displays all posts from all users.
+    '''
     posts = Post.objects.order_by("-timestamp").all()
+    paginator = Paginator(posts, 2)
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+    page_numbers_list = paginator.get_elided_page_range(page_number, on_each_side=1, on_ends=1)
+
     return render(request, "network/index.html", {
         "form": NewPostForm(),
-        "posts": posts
+        "page_obj": page_obj,
+        "page_numbers_list": page_numbers_list
+    })
+
+
+@login_required(login_url='/login')
+def following_posts(request):
+    '''
+    This function renders index.html that displays 
+    the new post form and displays all posts from the 
+    users that the authenticated user follows.
+    '''
+    authenticated_user = request.user
+    following = authenticated_user.get_following()
+    posts = Post.objects.filter(creator__in=following).order_by("-timestamp")
+    paginator = Paginator(posts, 2)
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+    page_numbers_list = paginator.get_elided_page_range(page_number, on_each_side=1, on_ends=1)
+
+    return render(request, "network/index.html", {
+        "following_posts_page": True,
+        "form": NewPostForm(),
+        "page_obj": page_obj,
+        "page_numbers_list": page_numbers_list
     })
 
 
