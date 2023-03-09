@@ -34,17 +34,6 @@
                 <div>Follow users so you can see their posts!</div>
             {% endif %}
         {% endfor %}
-
-        <nav aria-label="Page navigation">
-            <ul class="pagination">
-                {% for page in page_numbers_list %}
-                    {% if page == page_obj.paginator.ELLIPSIS %}
-                        <li class="page-item"><span class="page-link">{{ page }}</span></li>
-                    {% else %}
-                        <li class="page-item"><a class="page-link" href="?page={{ page }}">{{ page }}</a></li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
-        </nav>
+        {% include 'network/includes/page_navigation.html' %}
     </div>
 {% endblock %}

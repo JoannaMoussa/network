@@ -1,0 +1,27 @@
+<!--Page navigation btns-->
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        <!--Previous btn-->
+        {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+        {% else %}
+            <li class="page-item disabled"><span class="page-link">Previous</span></li>
+        {% endif %}
+        <!--Page number or ellipsis-->
+        {% for page in page_numbers_list %}
+            {% if page == page_obj.number %}
+                <li class="page-item disabled"><span class="page-link bg-primary text-light">{{ page }}</span></li>
+            {% elif page == page_obj.paginator.ELLIPSIS %}
+                <li class="page-item"><span class="page-link">{{ page }}</span></li>
+            {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{ page }}">{{ page }}</a></li>
+            {% endif %}
+        {% endfor %}
+        <!--Next btn-->
+        {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+        {% else %}
+            <li class="page-item disabled"><span class="page-link">Next</span></li>
+        {% endif %}
+    </ul>
+</nav>

@@ -22,7 +22,7 @@ def index(request):
     '''
     posts = Post.objects.order_by("-timestamp").all()
     paginator = Paginator(posts, 2)
-    page_number = request.GET.get('page', 1)
+    page_number = request.GET.get("page", 1)
     page_obj = paginator.get_page(page_number)
     page_numbers_list = paginator.get_elided_page_range(page_number, on_each_side=1, on_ends=1)
 
@@ -128,6 +128,11 @@ def new_post(request):
 def profile(request, username):
     profile_user = User.objects.get(username=username)
     profile_user_posts = profile_user.posts.order_by("-timestamp")
+    paginator = Paginator(profile_user_posts, 2)
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+    page_numbers_list = paginator.get_elided_page_range(page_number, on_each_side=1, on_ends=1)
+
     profile_user_followers = profile_user.get_followers()
     followers_number = len(profile_user_followers)
     profile_user_following = profile_user.get_following()
@@ -139,7 +144,8 @@ def profile(request, username):
 
     return render(request, "network/profile.html", {
         "profile_user": profile_user,
-        "profile_user_posts": profile_user_posts,
+        "page_obj": page_obj,
+        "page_numbers_list": page_numbers_list,
         "followers_number": followers_number,
         "following_number": following_number,
         "loggedIn_user_following": loggedIn_user_following
