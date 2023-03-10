@@ -8,6 +8,9 @@ from django import forms
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 # Create new post form
 class NewPostForm(forms.Form):
@@ -150,3 +153,32 @@ def profile(request, username):
         "following_number": following_number,
         "loggedIn_user_following": loggedIn_user_following
     })
+
+
+@csrf_exempt
+def unfollow(request):
+    # Unfollowing a user must be via DELETE request
+    if request.method != "DELETE":
+        return JsonResponse({"error": "DELETE request required."}, status=400)
+    
+    authenticated_user = request.user
+    data = json.loads(request.body)
+    profile_username = data.get("profile_username")
+    profile_user = User.objects.get(username=profile_username)
+    connection = Connection.objects.get(origin=authenticated_user, target=profile_user)
+    print(connection)
+    if not request.user.is_authenticated:
+        return JsonResponse({"error": "There's no logged in user."}, status=400)
+    if profile_user is None:
+        return JsonResponse({"error": "User to unfollow not found."}, status=400)
+    if connection is None:
+        return JsonResponse({"error": "The connection requested to be deleted was not found."}, status=400)
+    # delete the connection
+    connection.delete()
+    return JsonResponse({"message": f"You successfully unfollowed {profile_username}.",
+                         "followers_count": len(profile_user.get_followers())
+                         }, 
+                         status=201)
+
+
+        
