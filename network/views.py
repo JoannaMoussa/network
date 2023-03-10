@@ -161,24 +161,39 @@ def unfollow(request):
     if request.method != "DELETE":
         return JsonResponse({"error": "DELETE request required."}, status=400)
     
+    # Verify current user is logged in
     authenticated_user = request.user
-    data = json.loads(request.body)
-    profile_username = data.get("profile_username")
-    profile_user = User.objects.get(username=profile_username)
-    connection = Connection.objects.get(origin=authenticated_user, target=profile_user)
-    print(connection)
     if not request.user.is_authenticated:
         return JsonResponse({"error": "There's no logged in user."}, status=400)
-    if profile_user is None:
-        return JsonResponse({"error": "User to unfollow not found."}, status=400)
-    if connection is None:
+    
+    # Verify 'profile_username' field is in the request body
+    data = json.loads(request.body)
+    profile_username = data.get("profile_username")
+    if profile_username is None:
+        return JsonResponse({"error": "'profile_username' not found in request data."}, status=400)
+    
+    # Verify the username matches a User object
+    try:
+        profile_user = User.objects.get(username=profile_username)
+    except User.DoesNotExist:
+        return JsonResponse({"error": "Username didn't match any User."}, status=400)
+    
+    # Verify that the connection between the users exists, if so detele it
+    try:
+        connection = Connection.objects.get(origin=authenticated_user, target=profile_user)
+        if connection.delete()[0]: # != 0
+            return JsonResponse({"message": f"You successfully unfollowed {profile_username}.",
+                                "followers_count": len(profile_user.get_followers())
+                                }, 
+                                status=201)
+        else:
+            return JsonResponse({"error": "An error occured while deleting the connection."}, status=400)
+    except Connection.DoesNotExist:
         return JsonResponse({"error": "The connection requested to be deleted was not found."}, status=400)
-    # delete the connection
-    connection.delete()
-    return JsonResponse({"message": f"You successfully unfollowed {profile_username}.",
-                         "followers_count": len(profile_user.get_followers())
-                         }, 
-                         status=201)
 
+
+@csrf_exempt
+def follow(request):
+    pass
 
         
