@@ -194,6 +194,41 @@ def unfollow(request):
 
 @csrf_exempt
 def follow(request):
-    pass
+    # following a user must be via POST request
+    if request.method != "POST":
+        return JsonResponse({"error": "POST request required."}, status=400)
+    
+    # Verify current user is logged in
+    authenticated_user = request.user
+    if not request.user.is_authenticated:
+        return JsonResponse({"error": "There's no logged in user."}, status=400)
+    
+    # Verify 'profile_username' field is in the request body
+    data = json.loads(request.body)
+    profile_username = data.get("profile_username")
+    if profile_username is None:
+        return JsonResponse({"error": "'profile_username' not found in request data."}, status=400)
+    
+    # Verify the username matches a User object
+    try:
+        profile_user = User.objects.get(username=profile_username)
+    except User.DoesNotExist:
+        return JsonResponse({"error": "Username didn't match any User."}, status=400)
+    
+    # Check if the connection already exists. If not, add the new connection to the Connection model
+    try:
+        connection = Connection.objects.get(origin=authenticated_user, target=profile_user)
+    except Connection.DoesNotExist:
+        new_connection = Connection()
+        new_connection.origin = authenticated_user
+        new_connection.target = profile_user
+        new_connection.save()
+        return JsonResponse({"message": f"You are now following {profile_username}!",
+                            "followers_count": len(profile_user.get_followers())}, 
+                            status=201)
+    return JsonResponse({"error": f"You are already following {profile_username}!"})
+
+    
+
 
         

@@ -15,11 +15,11 @@
                 <div id="profile-username" data-username={{profile_user.username}} class="profile_page_font_size">{{ profile_user.username }}</div>
                 {% if user.is_authenticated and request.user != profile_user %}
                     {% if profile_user in loggedIn_user_following %}
-                        <button hidden id="follow-btn" class="btn btn-sm btn-primary rounded-pill ml-3">Follow</button>
-                        <button id="unfollow-btn" class="btn btn-sm btn-primary rounded-pill ml-3">Unfollow</button>
+                        <button id="follow-btn" class="btn btn-sm btn-primary rounded-pill ml-3" style="display:none">Follow</button>
+                        <button id="unfollow-btn" class="btn btn-sm btn-primary rounded-pill ml-3" style="display:block">Unfollow</button>
                     {% else %}
-                        <button id="follow-btn" class="btn btn-sm btn-primary rounded-pill ml-3">Follow</button>
-                        <button hidden id="unfollow-btn" class="btn btn-sm btn-primary rounded-pill ml-3">Unfollow</button>
+                        <button id="follow-btn" class="btn btn-sm btn-primary rounded-pill ml-3" style="display:block">Follow</button>
+                        <button id="unfollow-btn" class="btn btn-sm btn-primary rounded-pill ml-3" style="display:none">Unfollow</button>
                     {% endif %}
                 {% endif %}
             </div>
