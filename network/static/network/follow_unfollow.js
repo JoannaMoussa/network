@@ -1,20 +1,28 @@
-// This function creates an error message div with bootstrap classes for styling.
-function create_error_msg(error_msg){
-    const error_div = document.createElement('div');
-    error_div.classList.add('alert','alert-danger');
-    error_div.setAttribute('role', 'alert');
-    error_div.innerHTML = error_msg;
-    document.querySelector('#js-message').append(error_div);
-  }
+// This function displays the message in a modal (=pop up window)
+function create_msg(msg, is_error){
+    let popup_msg = document.querySelector("#popup-msg");
+    popup_msg.style.display = "flex";
+    if (popup_msg.classList.contains("popup_animation")) {
+        popup_msg.classList.remove("popup_animation")
+    }
+    popup_msg.classList.add("popup_animation")
+    popup_msg.addEventListener("animationend", () => {
+        popup_msg.classList.remove("popup_animation");
+        popup_msg.style.display = "none";
+    })
+    if (is_error){ 
+        popup_msg.classList.add("popup_error_msg");
+    }
+    else {
+        popup_msg.classList.add("popup_success_msg");
+    }
+    let popup_text = document.querySelector("#popup-text");
+    popup_text.innerHTML = msg;
 
-
-// This function creates a success message div with bootstrap classes for styling.
-function create_success_msg(success_msg){
-    const success_div = document.createElement('div');
-    success_div.classList.add('alert','alert-success');
-    success_div.setAttribute('role', 'alert');
-    success_div.innerHTML = success_msg;
-    document.querySelector('#js-message').append(success_div);
+    let close_btn = document.querySelector("#close-btn");
+    close_btn.addEventListener("click", () => {
+        popup_msg.style.display = "none";
+    })
   }
 
 
@@ -49,11 +57,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     document.querySelector("#followers-count").innerHTML = `<strong>${json_response.followers_count}</strong> Followers`
                 }
                 // Success message to the user
-                create_success_msg(json_response.message)
+                create_msg(json_response.message, false)
             })
             .catch(error_msg => {
                 // Error message to the user
-                create_error_msg(error_msg)
+                create_msg(error_msg, true)
               })
         })
     }
@@ -87,11 +95,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 // Success message to the user
-                create_success_msg(json_response.message)
+                create_msg(json_response.message, false)
             })
             .catch(error_msg => {
                 // Error message to the user
-                create_error_msg(error_msg)
+                create_msg(error_msg, true)
             })
         })
     }
