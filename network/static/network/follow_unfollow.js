@@ -11,9 +11,11 @@ function create_msg(msg, is_error){
         popup_msg.style.display = "none";
     })
     if (is_error){ 
+        popup_msg.classList.remove("popup_success_msg");
         popup_msg.classList.add("popup_error_msg");
     }
     else {
+        popup_msg.classList.remove("popup_error_msg");
         popup_msg.classList.add("popup_success_msg");
     }
     let popup_text = document.querySelector("#popup-text");

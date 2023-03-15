@@ -27,6 +27,13 @@ function create_msg(msg, is_error){
     })
   }
 
+// This function disables all edit icons of a document
+//function disable_edit_icons(edit_icons) {
+    //edit_icons.forEach(edit_icon => {
+        //edit_icon.
+    //})
+//}
+
 document.addEventListener('DOMContentLoaded', function() {
     edit_icons = document.querySelectorAll('[id^="edit-icon"]')
     if (edit_icons) {
@@ -58,10 +65,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 save_btn.addEventListener("click", () => {
                     let edited_content = text_area.value.trim();
                     if (edited_content == "") {
-                        create_msg("The post content can not be empty!", true)
+                        create_msg("Careful! The post content can not be empty!", true)
                     }
                     else if (edited_content.length > 280) {
-                        create_msg("You exceeded the maximum character length that is 280.", true)
+                        create_msg("Careful! You exceeded the maximum character length that is 280.", true)
                     }
                     else {
                         fetch("/saveEditedPost", {
@@ -85,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             create_msg(success_msg, false)
                         })
                         .catch(error_msg => {
-                            create_msg(error_msg, true)
+                            create_msg(error_msg, true);
                         })
                     }
                 })

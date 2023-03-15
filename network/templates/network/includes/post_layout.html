@@ -10,12 +10,12 @@
         <div id="like-edit-container-{{post.id}}" class="like_edit_container">
             <!--like container-->
             <div class="likes_container d-flex justify-content-start align-items-start">
-                {% if request.user in post.likers %}
-                    <i class="bi bi-heart-fill heart_icon"></i>
+                {% if request.user in post.likers.all %}
+                    <i id="heart-{{post.id}}" class="bi bi-heart-fill heart_fill_icon" data-postid={{post.id}}></i>
                 {% else %}
-                    <i class="bi bi-heart heart_icon"></i>
+                    <i id="heart-{{post.id}}" class="bi bi-heart heart_icon" data-postid={{post.id}}></i>
                 {% endif %}
-                <div class="likes_count_container ml-2">{{ post.likers.count }}</div>
+                <div id="likes-count-{{post.id}}" class="likes_count_container ml-2">{{ post.likers.count }}</div>
             </div>
             <!--edit container-->
             {% if request.user == post.creator %}

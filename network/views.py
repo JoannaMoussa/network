@@ -253,18 +253,57 @@ def save_edited_post(request):
     if request.user != post.creator:
         return JsonResponse({"error": "The authenticated user is not the creator of the post requested to be edited."})
     
-    new_post_content = data.get("text_area_content").strip()
+    new_post_content = data.get("text_area_content")
     # Verify that the text_area_content is in the request body
     if new_post_content is None:
-        return JsonResponse({"error":" 'new_post_content' not found in the request body."}, status=400)
-    # Verify that the text area content is not empty
-    if new_post_content == "":
-        return JsonResponse({"error":" The post content can not be empty!"}, status=400)
-    # Verify that the text area content does not exceed 280 characters
-    if len(new_post_content) > 280:
-        return JsonResponse({"error":" You exceeded the maximum character length that is 280."}, status=400)
+        return JsonResponse({"error":" 'text_area_content' not found in the request body."}, status=400)
+    else:
+        new_post_content = new_post_content.strip()
+        # Verify that the text area content is not empty
+        if new_post_content == "":
+            return JsonResponse({"error":" The post content can not be empty!"}, status=400)
+        # Verify that the text area content does not exceed 280 characters
+        if len(new_post_content) > 280:
+            return JsonResponse({"error":" You exceeded the maximum character length that is 280."}, status=400)
 
     post.content = new_post_content
     post.save()
     return JsonResponse({"message": "The post was edited successfully."}, status=201)
-        
+
+
+@csrf_exempt
+@login_required(login_url='/login')
+def like_toggle(request):
+    # Liking a post must be via PUT request
+    if request.method != "PUT":
+        return JsonResponse({"error": "PUT request required."}, status=400)
+    
+    data = json.loads(request.body)
+    post_id = data.get("post_id")
+
+    # Verify that the post_id is in the request body
+    if post_id is None:
+        return JsonResponse({"error": " 'post_id' not found in the request body. "}, status=400)
+    
+    # Verify that the post id matches a Post object
+    try:
+        post = Post.objects.get(id=post_id)
+    except Post.DoesNotExist:
+        return JsonResponse({"error": "Post id did not match any Post object."}, status=400)
+    
+    # Unlike the post
+    if request.user in post.likers.all():
+        post.likers.remove(request.user)
+        post.save()
+        return JsonResponse({"message": "You unliked the post!",
+                             "like": False,
+                             "likes_count": post.likers.count()}, 
+                             status=201)
+    # like the post
+    else:
+        post.likers.add(request.user)
+        post.save()
+        return JsonResponse({"message": "You liked the post!",
+                             "like": True,
+                             "likes_count": post.likers.count()}, 
+                             status=201)

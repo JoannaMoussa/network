@@ -4,10 +4,14 @@
     margin-top: 5px;
 }
 
-.heart_icon {
+.heart_icon, .heart_fill_icon {
     margin-top: 1px;
+    cursor: pointer;
 }
 
+.heart_fill_icon {
+    color: #007bff;
+}
 
 /*Profile page*/
 .profile_page_icon {
