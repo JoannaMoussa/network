@@ -1,0 +1,26 @@
+
+<div class="post_container d-flex justify-content-start align-items-start mb-3">
+    <i class="bi bi-person-square user_icon mr-2 d-flex justify-content-start"></i>
+    <div id="post-details-{{post.id}}" class="post_details d-flex flex-column justify-content-start align-items-start">
+        <div class="username_timestamp_container">
+            <div class="mr-3"><a href="{% url 'network:profile' post.creator.username %}">{{ post.creator }}</a> · {{ post.timestamp }}</div>
+        </div>
+        <div id="content-{{post.id}}" class="content_container mb-2">{{ post.content }}</div>
+        <!--container of the like and edit -->
+        <div id="like-edit-container-{{post.id}}" class="like_edit_container">
+            <!--like container-->
+            <div class="likes_container d-flex justify-content-start align-items-start">
+                {% if request.user in post.likers %}
+                    <i class="bi bi-heart-fill heart_icon"></i>
+                {% else %}
+                    <i class="bi bi-heart heart_icon"></i>
+                {% endif %}
+                <div class="likes_count_container ml-2">{{ post.likers.count }}</div>
+            </div>
+            <!--edit container-->
+            {% if request.user == post.creator %}
+                <i id="edit-icon-{{post.id}}" class="bi bi-pencil-square ml-4 edit_icon" data-postid={{post.id}}></i>
+            {% endif %}
+        </div>
+    </div>
+</div>

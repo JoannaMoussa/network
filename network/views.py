@@ -207,7 +207,7 @@ def follow(request):
     data = json.loads(request.body)
     profile_username = data.get("profile_username")
     if profile_username is None:
-        return JsonResponse({"error": "'profile_username' not found in request data."}, status=400)
+        return JsonResponse({"error": "'profile_username' not found in request body."}, status=400)
     
     # Verify the username matches a User object
     try:
@@ -228,7 +228,43 @@ def follow(request):
                             status=201)
     return JsonResponse({"error": f"You are already following {profile_username}!"})
 
+
+@csrf_exempt
+@login_required(login_url='/login')
+def save_edited_post(request):
+    # Editing a post must be via PUT request
+    if request.method != "PUT":
+        return JsonResponse({"error": "PUT request required."}, status=400)
     
+    data = json.loads(request.body)
+    post_id = data.get("post_id")
 
+    # Verify that the post_id is in the request body
+    if post_id is None:
+        return JsonResponse({"error":" 'post_id' not found in the request body."}, status=400)
 
+    # Verify that the post id matches a Post object
+    try:
+        post = Post.objects.get(id=post_id)
+    except Post.DoesNotExist:
+        return JsonResponse({"error": "Post id did not match any Post object."}, status=400)
+    
+    # Make sure that the authenticated user is the post creator, so has the rights to edit the post.
+    if request.user != post.creator:
+        return JsonResponse({"error": "The authenticated user is not the creator of the post requested to be edited."})
+    
+    new_post_content = data.get("text_area_content").strip()
+    # Verify that the text_area_content is in the request body
+    if new_post_content is None:
+        return JsonResponse({"error":" 'new_post_content' not found in the request body."}, status=400)
+    # Verify that the text area content is not empty
+    if new_post_content == "":
+        return JsonResponse({"error":" The post content can not be empty!"}, status=400)
+    # Verify that the text area content does not exceed 280 characters
+    if len(new_post_content) > 280:
+        return JsonResponse({"error":" You exceeded the maximum character length that is 280."}, status=400)
+
+    post.content = new_post_content
+    post.save()
+    return JsonResponse({"message": "The post was edited successfully."}, status=201)
         

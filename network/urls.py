@@ -15,5 +15,6 @@ urlpatterns = [
 
     # API routes
     path("unfollow", views.unfollow, name="unfollow"),
-    path("follow", views.follow, name="follow")
+    path("follow", views.follow, name="follow"),
+    path("saveEditedPost", views.save_edited_post, name="save_edited_post")
 ]
