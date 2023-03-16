@@ -280,10 +280,13 @@ def like_toggle(request):
     
     data = json.loads(request.body)
     post_id = data.get("post_id")
+    ui_like_state = data.get("ui_like_state")
 
-    # Verify that the post_id is in the request body
+    # Verify that the post_id and ui_like_state are in the request body
     if post_id is None:
         return JsonResponse({"error": " 'post_id' not found in the request body. "}, status=400)
+    if ui_like_state is None:
+        return JsonResponse({"error": " 'ui_like_state' not found in the request body. "}, status=400)
     
     # Verify that the post id matches a Post object
     try:
@@ -291,19 +294,27 @@ def like_toggle(request):
     except Post.DoesNotExist:
         return JsonResponse({"error": "Post id did not match any Post object."}, status=400)
     
-    # Unlike the post
-    if request.user in post.likers.all():
-        post.likers.remove(request.user)
-        post.save()
-        return JsonResponse({"message": "You unliked the post!",
-                             "like": False,
-                             "likes_count": post.likers.count()}, 
-                             status=201)
-    # like the post
-    else:
-        post.likers.add(request.user)
-        post.save()
-        return JsonResponse({"message": "You liked the post!",
-                             "like": True,
-                             "likes_count": post.likers.count()}, 
-                             status=201)
+    user_in_likers = request.user in post.likers.all()
+
+    if ui_like_state == False: # User intent was to like
+        if user_in_likers:
+            return JsonResponse({"like": True,
+                                 "likes_count": post.likers.count()},
+                                 status=201)
+        else:
+            post.likers.add(request.user)
+            post.save()
+            return JsonResponse({"like": True,
+                                "likes_count": post.likers.count()}, 
+                                status=201)
+    else: # User intent was to unlike
+        if user_in_likers:
+            post.likers.remove(request.user)
+            post.save()
+            return JsonResponse({"like": False,
+                                "likes_count": post.likers.count()},
+                                status=201)
+        else:
+            return JsonResponse({"like": False,
+                                 "likes_count": post.likers.count()},
+                                 status=201)

@@ -33,10 +33,22 @@ document.addEventListener('DOMContentLoaded', function() {
         heart_icons.forEach(heart_icon => {
             heart_icon.addEventListener("click", () => {
                 let post_id = heart_icon.dataset.postid;
+                // ui_like_state is a variable that will indicate the like state in the front end.
+                // in other terms, as per the user, he's one of the likers of the post or not?
+                if (heart_icon.classList.contains("bi-heart-fill")){
+                    ui_like_state = true;
+                }
+                else if (heart_icon.classList.contains("bi-heart")){
+                    ui_like_state = false;
+                }
+                else{
+                    create_msg("Erorr processing request. Please reload page.", true);
+                }
                 fetch("/liketoggle", {
                     method: "PUT",
                     body: JSON.stringify({
-                        "post_id": post_id
+                        "post_id": post_id,
+                        "ui_like_state": ui_like_state
                     })
                 })
                 .then(response => {
@@ -51,14 +63,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         heart_icon.classList.remove("heart_fill_icon");
                         heart_icon.classList.add("bi-heart");
                         likes_count_container.innerHTML = json.likes_count;
-                        create_msg(json.message, false);
                     }
                     else {
                         heart_icon.classList.remove("bi-heart");
                         heart_icon.classList.add("bi-heart-fill");
                         heart_icon.classList.add("heart_fill_icon");
                         likes_count_container.innerHTML = json.likes_count;
-                        create_msg(json.message, false);
                     }
                 })
                 .catch(error_msg => {
