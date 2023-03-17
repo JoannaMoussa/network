@@ -2,24 +2,28 @@
 <div class="post_container d-flex justify-content-start align-items-start mb-3">
     <i class="bi bi-person-square user_icon mr-2 d-flex justify-content-start"></i>
     <div id="post-details-{{post.id}}" class="post_details d-flex flex-column justify-content-start align-items-start">
-        <div class="username_timestamp_container">
+        <!--username+timestamp container-->
+        <div>
             <div class="mr-3"><a href="{% url 'network:profile' post.creator.username %}">{{ post.creator }}</a> · {{ post.timestamp }}</div>
         </div>
-        <div id="content-{{post.id}}" class="content_container mb-2">{{ post.content }}</div>
+        <!--Content container-->
+        <div id="content-{{post.id}}" class="mb-1">{{ post.content }}</div>
         <!--container of the like and edit -->
         <div id="like-edit-container-{{post.id}}" class="like_edit_container">
             <!--like container-->
-            <div class="likes_container d-flex justify-content-start align-items-start">
+            <div class="d-flex align-items-start">
                 {% if request.user in post.likers.all %}
-                    <i id="heart-{{post.id}}" class="bi bi-heart-fill heart_fill_icon" data-postid={{post.id}}></i>
+                    <div id="heart-{{post.id}}" class="heart red_heart" data-postid={{post.id}} data-likestate="liked"></div>
+                    <!--<i id="heart-{{post.id}}" class="bi bi-heart-fill heart_fill_icon" data-postid={{post.id}}></i>-->
                 {% else %}
-                    <i id="heart-{{post.id}}" class="bi bi-heart heart_icon" data-postid={{post.id}}></i>
+                    <div id="heart-{{post.id}}" class="heart" data-postid={{post.id}} data-likestate="notliked"></div>
+                    <!--<i id="heart-{{post.id}}" class="bi bi-heart heart_icon" data-postid={{post.id}}></i>-->
                 {% endif %}
-                <div id="likes-count-{{post.id}}" class="likes_count_container ml-2">{{ post.likers.count }}</div>
+                <div id="likes-count-{{post.id}}" class="likes_count_container">{{ post.likers.count }}</div>
             </div>
             <!--edit container-->
             {% if request.user == post.creator %}
-                <i id="edit-icon-{{post.id}}" class="bi bi-pencil-square ml-4 edit_icon" data-postid={{post.id}}></i>
+                <i id="edit-icon-{{post.id}}" class="bi bi-pencil-square edit_icon" data-postid={{post.id}}></i>
             {% endif %}
         </div>
     </div>

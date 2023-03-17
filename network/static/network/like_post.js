@@ -32,48 +32,53 @@ document.addEventListener('DOMContentLoaded', function() {
     if (heart_icons) {
         heart_icons.forEach(heart_icon => {
             heart_icon.addEventListener("click", () => {
-                let post_id = heart_icon.dataset.postid;
-                // ui_like_state is a variable that will indicate the like state in the front end.
-                // in other terms, as per the user, he's one of the likers of the post or not?
-                if (heart_icon.classList.contains("bi-heart-fill")){
-                    ui_like_state = true;
-                }
-                else if (heart_icon.classList.contains("bi-heart")){
-                    ui_like_state = false;
-                }
-                else{
-                    create_msg("Erorr processing request. Please reload page.", true);
-                }
-                fetch("/liketoggle", {
-                    method: "PUT",
-                    body: JSON.stringify({
-                        "post_id": post_id,
-                        "ui_like_state": ui_like_state
-                    })
-                })
-                .then(response => {
-                    return response.json().then(json => {
-                        return response.ok ? json : Promise.reject(json.error);
-                    })
-                })
-                .then(json => {
-                    let likes_count_container = document.querySelector(`#likes-count-${post_id}`)
-                    if (json.like == false){
-                        heart_icon.classList.remove("bi-heart-fill");
-                        heart_icon.classList.remove("heart_fill_icon");
-                        heart_icon.classList.add("bi-heart");
-                        likes_count_container.innerHTML = json.likes_count;
+                if (! heart_icon.classList.contains("like_animation")) {
+                    let post_id = heart_icon.dataset.postid;
+                    // ui_like_state is a variable that will indicate the like state in the front end.
+                    // in other terms, as per the user, he's one of the likers of the post or not?
+                    let ui_like_state;
+                    if (heart_icon.dataset.likestate == "liked"){
+                        ui_like_state = true;
+                    }
+                    else if (heart_icon.dataset.likestate == "notliked"){
+                        ui_like_state = false;
                     }
                     else {
-                        heart_icon.classList.remove("bi-heart");
-                        heart_icon.classList.add("bi-heart-fill");
-                        heart_icon.classList.add("heart_fill_icon");
-                        likes_count_container.innerHTML = json.likes_count;
+                        create_msg("Erorr processing request. Please reload page.", true);
                     }
-                })
-                .catch(error_msg => {
-                    create_msg(error_msg, true);
-                })
+                    fetch("/liketoggle", {
+                        method: "PUT",
+                        body: JSON.stringify({
+                            "post_id": post_id,
+                            "ui_like_state": ui_like_state
+                        })
+                    })
+                    .then(response => {
+                        return response.json().then(json => {
+                            return response.ok ? json : Promise.reject(json.error);
+                        })
+                    })
+                    .then(json => {
+                        let likes_count_container = document.querySelector(`#likes-count-${post_id}`)
+                        if (json.like == false){
+                            heart_icon.classList.remove("red_heart");
+                            likes_count_container.innerHTML = json.likes_count;
+                            heart_icon.dataset.likestate = "notliked";
+                        }
+                        else {
+                            heart_icon.classList.add("like_animation");
+                            likes_count_container.innerHTML = json.likes_count;
+                            heart_icon.dataset.likestate = "liked";
+                            heart_icon.addEventListener("animationend", () => {
+                                heart_icon.classList.remove("like_animation");
+                                heart_icon.classList.add("red_heart");
+                            })
+                        }
+                    })
+                    .catch(error_msg => {
+                        create_msg(error_msg, true);
+                    })
+                } 
             })
         })
     }

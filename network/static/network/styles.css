@@ -4,13 +4,48 @@
     margin-top: 5px;
 }
 
-.heart_icon, .heart_fill_icon {
-    margin-top: 1px;
-    cursor: pointer;
+.like_edit_container {
+    display: flex;
 }
 
-.heart_fill_icon {
-    color: red;
+.likes_count_container {
+    margin-left: -5px;
+    margin-top: 1px;
+}
+
+.edit_icon {
+    cursor: pointer;
+    display: flex;
+    align-items: start;
+    margin-top: 7px;
+    margin-left: 30px;
+}
+
+
+.heart {
+    cursor: pointer;
+    background-image:url( 'https://abs.twimg.com/a/1446542199/img/t1/web_heart_animation.png');
+    background-position: left;
+    background-size:2900%;
+    height: 55px;
+    width: 55px;
+    margin-left: -19px;
+    margin-top: -13px;
+}
+
+.red_heart {
+    background-position: right;
+}
+
+/*like heart animation*/
+.like_animation {
+    animation: like-animation 0.7s steps(28) forwards;
+}
+
+@keyframes like-animation {
+    to {
+        background-position: right;
+    }
 }
 
 /*Profile page*/
@@ -23,6 +58,12 @@
     font-size: 20px;
 }
 
+
+/*Animation class for the pop up message*/
+.popup_animation {
+    animation-name: fade_in_fade_out;
+    animation-duration: 5s;
+}
 
 @keyframes fade_in_fade_out {
     0% {
@@ -37,12 +78,6 @@
     100% {
         opacity: 0;
     }
-}
-
-/*Animation class for the pop up message*/
-.popup_animation {
-    animation-name: fade_in_fade_out;
-    animation-duration: 5s;
 }
 
 /* Pop up message */
@@ -89,10 +124,7 @@
 }
 
 
-.edit_icon {
-    cursor: pointer;
-}
-
-.like_edit_container {
-    display: flex;
+.django_template_message {
+    position: fixed;
+    bottom: 2%;
 }
