@@ -3,13 +3,15 @@ function create_msg(msg, is_error){
     let popup_msg = document.querySelector("#popup-msg");
     popup_msg.style.display = "flex";
     if (popup_msg.classList.contains("popup_animation")) {
-        popup_msg.classList.remove("popup_animation");
+        // restart animation
+        popup_msg.style.animation = "none";
+        popup_msg.offsetHeight; // trigger reflow
+        popup_msg.style.animation = null;
     }
-    popup_msg.classList.add("popup_animation");
-    popup_msg.addEventListener("animationend", () => {
-        popup_msg.classList.remove("popup_animation");
-        popup_msg.style.display = "none";
-    })
+    else {
+        popup_msg.classList.add("popup_animation");
+    }
+     
     if (is_error){ 
         popup_msg.classList.remove("popup_success_msg");
         popup_msg.classList.add("popup_error_msg");
@@ -20,15 +22,20 @@ function create_msg(msg, is_error){
     }
     let popup_text = document.querySelector("#popup-text");
     popup_text.innerHTML = msg;
-
-    let close_btn = document.querySelector("#close-btn");
-    close_btn.addEventListener("click", () => {
-        popup_msg.style.display = "none";
-    })
   }
 
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Add event listeners to the popup message and its close btn
+    let popup_msg = document.querySelector("#popup-msg");
+    popup_msg.addEventListener("animationend", () => {
+        popup_msg.classList.remove("popup_animation");
+        popup_msg.style.display = "none";
+    })
+    let close_btn = document.querySelector("#close-btn");
+    close_btn.addEventListener("click", () => {
+        popup_msg.style.display = "none";
+    })
     
     profile_username = document.querySelector("#profile-username").dataset.username
 
