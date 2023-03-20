@@ -11,7 +11,7 @@ The application has the following features:
 
 1. **Following:** This page is only available to users who are **signed in**. It's where users see all posts made by users that the current user follows.
 
-1. **New Post:** From the `All posts` page or from the `Following page`, users who are **signed in** are able to write a new text-based post by filling in text into a text area and then clicking a button to submit the post.
+1. **New Post:** From the "All posts" page or from the "Following page", users who are **signed in** are able to write a new text-based post by filling in text into a text area and then clicking a button to submit the post.
 
 1. **Profile Page:** Clicking on a username loads that user’s profile page. This page displays:
     * The number of followers the user has, as well as the number of people that the user follows.
@@ -28,6 +28,6 @@ The application has the following features:
 1. **Like and Unlike:** Users are able to click a button on any post to toggle whether or not they “like” that post.
 
  Using JavaScript (via a call to fetch), the following functionalities are achieved without requiring a reload of the entire page:
-    * Follow and Unfollow
-    * Edit Post
-    * Like and Unlike
+* Follow and Unfollow
+* Edit Post
+* Like and Unlike
