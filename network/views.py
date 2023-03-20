@@ -24,7 +24,7 @@ def index(request):
     and displays all posts from all users.
     '''
     posts = Post.objects.order_by("-timestamp").all()
-    paginator = Paginator(posts, 5)
+    paginator = Paginator(posts, 10)
     page_number = request.GET.get("page", 1)
     page_obj = paginator.get_page(page_number)
     page_numbers_list = paginator.get_elided_page_range(page_number, on_each_side=1, on_ends=1)
@@ -46,7 +46,7 @@ def following_posts(request):
     authenticated_user = request.user
     following = authenticated_user.get_following()
     posts = Post.objects.filter(creator__in=following).order_by("-timestamp")
-    paginator = Paginator(posts, 2)
+    paginator = Paginator(posts, 10)
     page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
     page_numbers_list = paginator.get_elided_page_range(page_number, on_each_side=1, on_ends=1)
