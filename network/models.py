@@ -31,7 +31,7 @@ class Post(models.Model):
     
 
     def frontend_timestamp(self):
-        current_time = datetime.datetime.now().replace(tzinfo=pytz.UTC)
+        current_time = datetime.datetime.utcnow().replace(tzinfo=pytz.UTC)
         # self.timestamp has a time zone parameter, however datetime.now() has a default value of None for this parameter.
         # I should add a time zone for the datetime.now(), otherwise the substraction will give an error:
         # TypeError: can't subtract offset-naive and offset-aware datetimes

@@ -3,9 +3,9 @@ function create_msg(msg, is_error){
     let popup_msg = document.querySelector("#popup-msg");
     popup_msg.style.display = "flex";
     if (popup_msg.classList.contains("popup_animation")) {
-        popup_msg.classList.remove("popup_animation")
+        popup_msg.classList.remove("popup_animation");
     }
-    popup_msg.classList.add("popup_animation")
+    popup_msg.classList.add("popup_animation");
     popup_msg.addEventListener("animationend", () => {
         popup_msg.classList.remove("popup_animation");
         popup_msg.style.display = "none";

@@ -65,6 +65,10 @@
     animation-duration: 5s;
 }
 
+.remove-animation {
+    animation: none !important;
+  }
+
 @keyframes fade_in_fade_out {
     0% {
         opacity: 0;
