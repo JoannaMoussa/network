@@ -4,7 +4,7 @@
     <div id="post-details-{{post.id}}" class="post_details d-flex flex-column justify-content-start align-items-start">
         <!--username+timestamp container-->
         <div>
-            <div class="mr-3"><a href="{% url 'network:profile' post.creator.username %}">{{ post.creator }}</a> · {{ post.timestamp }}</div>
+            <div class="mr-3"><a href="{% url 'network:profile' post.creator.username %}">{{ post.creator }}</a> · {{ post.frontend_timestamp }}</div>
         </div>
         <!--Content container-->
         <div id="content-{{post.id}}" class="mb-1">{{ post.content }}</div>

@@ -1,5 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+import datetime
+import pytz
 
 
 class User(AbstractUser):
@@ -27,6 +29,28 @@ class Post(models.Model):
     def __str__(self):
         return f"{self.creator} tweeted on {self.timestamp}: {self.content[:20]}{'...' if len(self.content) > 20 else ''}"
     
+
+    def frontend_timestamp(self):
+        current_time = datetime.datetime.now().replace(tzinfo=pytz.UTC)
+        # self.timestamp has a time zone parameter, however datetime.now() has a default value of None for this parameter.
+        # I should add a time zone for the datetime.now(), otherwise the substraction will give an error:
+        # TypeError: can't subtract offset-naive and offset-aware datetimes
+        difference = current_time - self.timestamp
+        one_day = datetime.timedelta(days=1)
+        if difference < one_day: # if difference less than 1 day
+            difference_seconds = int(difference.total_seconds())
+            if difference_seconds < 60:
+                return  f"{difference_seconds}s"
+            elif difference_seconds < 60*60:
+                mins = difference_seconds // 60
+                return  f"{mins}m"
+            else:
+                hrs = difference_seconds // (60*60)
+                return  f"{hrs}h"
+        else: # if difference greater than 1 day
+            return self.timestamp
+    
+
     def serialize(self):
         return {
             "id": self.id,
