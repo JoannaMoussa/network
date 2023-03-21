@@ -27,7 +27,7 @@ The application has the following features:
 
 1. **Like and Unlike:** Users are able to click a button on any post to toggle whether or not they “like” that post.
 
- Using JavaScript (via a call to fetch), the following functionalities are achieved without requiring a reload of the entire page:
+ Using JavaScript, the following functionalities are achieved without requiring a reload of the entire page:
 * Follow and Unfollow
-* Edit Post
-* Like and Unlike
+* Edit a Post
+* Like and Unlike a Post
