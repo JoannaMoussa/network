@@ -45,10 +45,10 @@
             </div>
         </nav>
 
+        {% include 'network/includes/messages.html' %}
+        
         {% block body %}
         {% endblock %}
-
-        {% include 'network/includes/messages.html' %}
 
         <!-- Pop up message -->
         <div id="popup-msg" class="popup_msg ml-4">

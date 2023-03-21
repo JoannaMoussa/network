@@ -12,12 +12,15 @@
         <div id="like-edit-container-{{post.id}}" class="like_edit_container">
             <!--like container-->
             <div class="d-flex align-items-start">
-                {% if request.user in post.likers.all %}
-                    <div id="heart-{{post.id}}" class="heart red_heart" data-postid={{post.id}} data-likestate="liked"></div>
-                    <!--<i id="heart-{{post.id}}" class="bi bi-heart-fill heart_fill_icon" data-postid={{post.id}}></i>-->
+                {% if not user.is_authenticated %}
+                    <!--Remove id from heart icon when user not logged in to prevent adding event listener-->
+                    <div class="heart" data-postid={{post.id}} data-likestate="notliked"></div>
                 {% else %}
-                    <div id="heart-{{post.id}}" class="heart" data-postid={{post.id}} data-likestate="notliked"></div>
-                    <!--<i id="heart-{{post.id}}" class="bi bi-heart heart_icon" data-postid={{post.id}}></i>-->
+                    {% if request.user in post.likers.all %}
+                        <div id="heart-{{post.id}}" class="heart red_heart" data-postid={{post.id}} data-likestate="liked"></div>
+                    {% else %}
+                        <div id="heart-{{post.id}}" class="heart" data-postid={{post.id}} data-likestate="notliked"></div>
+                    {% endif %}
                 {% endif %}
                 <div id="likes-count-{{post.id}}" class="likes_count_container">{{ post.likers.count }}</div>
             </div>

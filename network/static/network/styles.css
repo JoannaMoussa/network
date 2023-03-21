@@ -122,9 +122,3 @@
     font-size: 18px;
     color: #ffffff;
 }
-
-
-.django_template_message {
-    position: fixed;
-    bottom: 2%;
-}

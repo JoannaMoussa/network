@@ -155,6 +155,7 @@ def profile(request, username):
     })
 
 
+@login_required(login_url='/login')
 @csrf_exempt
 def unfollow(request):
     # Unfollowing a user must be via DELETE request
@@ -192,6 +193,7 @@ def unfollow(request):
         return JsonResponse({"error": "The connection requested to be deleted was not found."}, status=400)
 
 
+@login_required(login_url='/login')
 @csrf_exempt
 def follow(request):
     # following a user must be via POST request
@@ -274,6 +276,9 @@ def save_edited_post(request):
 @csrf_exempt
 @login_required(login_url='/login')
 def like_toggle(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({"error": "Logging in required."}, status=400)
+    
     # Liking a post must be via PUT request
     if request.method != "PUT":
         return JsonResponse({"error": "PUT request required."}, status=400)
